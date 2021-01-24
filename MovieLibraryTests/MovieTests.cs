@@ -16,16 +16,19 @@ namespace MovieLibraryTests
         [TestMethod]
         public void SortingTest()
         {
-            HttpClient client = new HttpClient();
             MovieService movieService = new MovieService();
-            var result = client.GetAsync("https://ithstenta2020.s3.eu-north-1.amazonaws.com/topp100.json").Result;
-            var movieList = JsonSerializer.Deserialize<List<Movie>>(new StreamReader(result.Content.ReadAsStream()).ReadToEnd());
+            var mockMovieList = new List<Movie>
+            {
+                new Movie { title = "MovieOne", id = "1", rated = "6" },
+                new Movie { title = "MovieTwo", id = "2", rated = "9" },
+                new Movie { title = "MovieThree", id = "3", rated = "4" }
+            };
 
-            var expected = movieService.SortLists(movieList, false)[0];
-            var expectedTwo = movieService.SortLists(movieList, true)[0];
+            var expectedDecending = movieService.SortLists(mockMovieList, false)[0];
+            var expectedAscending = movieService.SortLists(mockMovieList, true)[0];
 
-            Assert.AreEqual("The Shawshank Redemption", expected);
-            Assert.AreEqual("Once Upon a Time in America", expectedTwo);
+            Assert.AreEqual("MovieTwo", expectedDecending);
+            Assert.AreEqual("MovieThree", expectedAscending);
         }
     }
 }
